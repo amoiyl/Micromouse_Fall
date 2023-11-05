@@ -1,0 +1,3 @@
+../Core/Src/encoders.c:11:9:getRightEncoderCounts	1
+../Core/Src/encoders.c:18:9:getLeftEncoderCounts	1
+../Core/Src/encoders.c:25:6:resetEncoders	1
