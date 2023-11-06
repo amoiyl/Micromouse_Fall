@@ -60,8 +60,8 @@ all: main-build
 main-build: Rat.elf secondary-outputs
 
 # Tool invocations
-Rat.elf Rat.map: $(OBJS) $(USER_OBJS) /Users/amy/Downloads/Ratv2/STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Rat.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/Users/amy/Downloads/Ratv2/STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Rat.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Rat.elf Rat.map: $(OBJS) $(USER_OBJS) /Users/amy/Documents/GitHub/micromouse_fallF/Ratv2/STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Rat.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/Users/amy/Documents/GitHub/micromouse_fallF/Ratv2/STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Rat.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
