@@ -21,8 +21,9 @@ void move(int8_t n) {
 	 */
 
 	setPIDGoalD(n*390);
+	setPIDGoalA(0);
 
-	while (PIDdone()) {
+	while (!PIDdone()) {
 
 	}
 
@@ -35,9 +36,10 @@ void move(int8_t n) {
  */
 void turn(int8_t n) {
 
-	setPIDGoalA(n*420);
+	setPIDGoalA(n*520);
+	setPIDGoalD(0);
 
-	while (PIDdone()) {
+	while (!PIDdone()) {
 
 	}
 

@@ -32,13 +32,13 @@ float limitPWM(float pwm) {
  * Implement this function to make the left wheel spin forwards when pwm is >= 0, and spin backwards when pwm < 0.
  */
 void setMotorLPWM(float pwm) {
-	if (pwm >= 0) {
+	if (pwm <= 0) {
 		TIM4->CCR4 = 0;
-		TIM4->CCR3 = (uint32_t) (limitPWM(pwm) * MAX_TIMER_COUNTS);
+		TIM4->CCR3 = (uint32_t) (limitPWM(pwm) * -MAX_TIMER_COUNTS);
 
 	} else {
 		TIM4->CCR3 = 0;
-		TIM4->CCR4 = (uint32_t) (limitPWM(-pwm) * MAX_TIMER_COUNTS);
+		TIM4->CCR4 = (uint32_t) (limitPWM(pwm) * MAX_TIMER_COUNTS);
 	}
 }
 

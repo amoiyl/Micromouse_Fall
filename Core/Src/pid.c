@@ -8,15 +8,15 @@
 
 int angleError = 0;
 int oldAngleError = 0;
-float distanceError = .4;
-float oldDistanceError;
+float distanceError = 0;
+float oldDistanceError=0;
 
-float angleCorrection;
+float angleCorrection=0;
 
-float kPw = .26;
-float kDw = .1;
+float kPw = .001;
+float kDw = 0;
 
-float kPx = 1;
+float kPx = 0.00;
 float kDx = 0;
 
 float goalDistance = 0;
@@ -37,17 +37,13 @@ void resetPID() {
 
 	angleError = 0;
 	oldAngleError = 0;
-	distanceError = .4;
-	oldDistanceError;
+	distanceError = 0;
+	oldDistanceError = 0;
 
-	kPw = .26;
-	kDw = .1;
 
-	kPx = 1;
-	kDx = 0;
 
-	goalDistance = 0;
-	goalAngle = 0;
+	//goalDistance = 0;
+	//goalAngle = 0;
 
 	count = 0;
 
@@ -61,13 +57,30 @@ void updatePID() {
 	angleCorrection = kPw * angleError + kDw * (angleError - oldAngleError);
 	oldAngleError = angleError;
 
-
-	distanceError = goalDistance - ((getRightEncoderCounts() - getLeftEncoderCounts()) / 2);
-	float distanceCorrection = kPx * distanceError + kDx * (distanceError - oldDistanceError);
+	distanceError = goalDistance
+			- ((getRightEncoderCounts() + getLeftEncoderCounts()) / 2);
+	float distanceCorrection = kPx * distanceError
+			+ kDx * (distanceError - oldDistanceError);
 	oldDistanceError = distanceError;
 
-	setMotorLPWM(distanceCorrection + angleCorrection);
-	setMotorRPWM(distanceCorrection - angleCorrection);
+	float leftCorrection = distanceCorrection - angleCorrection;
+	float rightCorrection = distanceCorrection + angleCorrection;
+
+	if (leftCorrection < .3 && leftCorrection > 0) {
+		setMotorLPWM(leftCorrection + .3);
+	} else if (leftCorrection > -.3 && leftCorrection < 0) {
+		setMotorLPWM(leftCorrection - .3);
+	} else {
+		setMotorLPWM(leftCorrection);
+	}
+
+	if (rightCorrection < .3 && rightCorrection > 0) {
+		setMotorRPWM(rightCorrection + .3);
+	} else if (rightCorrection > -.3 && rightCorrection < 0) {
+		setMotorRPWM(rightCorrection - .3);
+	} else {
+		setMotorRPWM(rightCorrection);
+	}
 
 
 	/*
@@ -97,7 +110,6 @@ void setPIDGoalD(int16_t distance) {
 	 */
 	goalDistance = distance;
 
-
 }
 
 void setPIDGoalA(int16_t angle) {
@@ -115,13 +127,13 @@ int8_t PIDdone(void) { // There is no bool type in C. True/False values are repr
 	 * the error is zero (realistically, have it set the variable when the error is close to zero, not just exactly zero). You will have better results if you make
 	 * PIDdone() return true only if the error has been sufficiently close to zero for a certain number, say, 50, of SysTick calls in a row.
 	 */
-	if(-20 < angleError && angleError < 20) {
+	if (-20 < angleError && angleError < 20) {
 		count++;
 	} else {
 		count = 0;
 	}
 
-	if(count >= 50) {
+	if (count >= 50) {
 		return 1;
 	}
 	return 0;
