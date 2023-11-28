@@ -4,11 +4,14 @@
 
 #include "main.h"
 #include "motors.h"
+#include "encoders.h"
 
 int angleError = 0;
 int oldAngleError = 0;
 float distanceError = .4;
 float oldDistanceError;
+
+float angleCorrection;
 
 float kPw = .26;
 float kDw = .1;
@@ -31,18 +34,35 @@ void resetPID() {
 	 *
 	 * You should additionally set your distance and error goal values (and your oldDistanceError and oldAngleError) to zero.
 	 */
+
+	angleError = 0;
+	oldAngleError = 0;
+	distanceError = .4;
+	oldDistanceError;
+
+	kPw = .26;
+	kDw = .1;
+
+	kPx = 1;
+	kDx = 0;
+
+	goalDistance = 0;
+	goalAngle = 0;
+
+	count = 0;
+
+	resetEncoders();
+	resetMotors();
 }
 
 void updatePID() {
-	int avgEncoderCounts = (getRightEncoderCounts() - getLeftEncoderCounts()) / 2;
-	distanceError = goalDistance - avgEncoderCounts;
-	angleError = goalAngle - avgEncoderCounts;
 
-	oldDistanceError = distanceError;
-	angleError = getRightEncoderCounts() - getLeftEncoderCounts();
-	float angleCorrection = kPw * angleError + kDw * (angleError - oldAngleError);
+	angleError = goalAngle - (getRightEncoderCounts() - getLeftEncoderCounts());
+	angleCorrection = kPw * angleError + kDw * (angleError - oldAngleError);
 	oldAngleError = angleError;
 
+
+	distanceError = goalDistance - ((getRightEncoderCounts() - getLeftEncoderCounts()) / 2);
 	float distanceCorrection = kPx * distanceError + kDx * (distanceError - oldDistanceError);
 	oldDistanceError = distanceError;
 
@@ -95,7 +115,7 @@ int8_t PIDdone(void) { // There is no bool type in C. True/False values are repr
 	 * the error is zero (realistically, have it set the variable when the error is close to zero, not just exactly zero). You will have better results if you make
 	 * PIDdone() return true only if the error has been sufficiently close to zero for a certain number, say, 50, of SysTick calls in a row.
 	 */
-	if(-5 < angleError && angleError < 5) {
+	if(-20 < angleError && angleError < 20) {
 		count++;
 	} else {
 		count = 0;

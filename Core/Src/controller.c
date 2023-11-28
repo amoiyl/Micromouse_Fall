@@ -19,6 +19,14 @@ void move(int8_t n) {
 	 *
 	 * You should also call resetPID before exiting this function so your rat is ready for the next instruction.
 	 */
+
+	setPIDGoalD(n*390);
+
+	while (PIDdone()) {
+
+	}
+
+	resetPID();
 }
 
 /*
@@ -26,14 +34,11 @@ void move(int8_t n) {
  * direction and turn(-1) turns the other way.
  */
 void turn(int8_t n) {
-	int turns = 0;
 
-	while (turns <= n) {
-		if (PIDdone()) {
-			setPIDGoalA(500);
-			setPIDGoalD(-214);
-			turns++;
-		}
+	setPIDGoalA(n*420);
+
+	while (PIDdone()) {
+
 	}
 
 	resetPID();
