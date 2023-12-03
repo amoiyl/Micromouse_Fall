@@ -16,11 +16,11 @@ float angleCorrection=0;
 float kPw = .001;
 float kDw = 0;
 
-float kPx = 0.00;
+float kPx = 0.001;
 float kDx = 0;
 
-float goalDistance = 0;
-float goalAngle = 0;
+int goalDistance = 0;
+int goalAngle = 0;
 
 int count = 0;
 
@@ -66,7 +66,7 @@ void updatePID() {
 	float leftCorrection = distanceCorrection - angleCorrection;
 	float rightCorrection = distanceCorrection + angleCorrection;
 
-	if (leftCorrection < .3 && leftCorrection > 0) {
+	/*if (leftCorrection < .3 && leftCorrection > 0) {
 		setMotorLPWM(leftCorrection + .3);
 	} else if (leftCorrection > -.3 && leftCorrection < 0) {
 		setMotorLPWM(leftCorrection - .3);
@@ -81,7 +81,7 @@ void updatePID() {
 	} else {
 		setMotorRPWM(rightCorrection);
 	}
-
+	 */
 
 	/*
 	 * This function will do the heavy lifting PID logic. It should do the following: read the encoder counts to determine an error,
@@ -100,6 +100,12 @@ void updatePID() {
 	 * your left and right encoder counts. Calculate angleError as the difference between your goal angle and the difference between your left and
 	 * right encoder counts. Refer to pseudocode example document on the google drive for some pointers.
 	 */
+
+	if (-20 < angleError && angleError < 20 && -20 < distanceError && distanceError < 20) {
+		count++;
+	} else {
+		count = 0;
+	}
 
 }
 
@@ -127,12 +133,6 @@ int8_t PIDdone(void) { // There is no bool type in C. True/False values are repr
 	 * the error is zero (realistically, have it set the variable when the error is close to zero, not just exactly zero). You will have better results if you make
 	 * PIDdone() return true only if the error has been sufficiently close to zero for a certain number, say, 50, of SysTick calls in a row.
 	 */
-	if (-20 < angleError && angleError < 20) {
-		count++;
-	} else {
-		count = 0;
-	}
-
 	if (count >= 50) {
 		return 1;
 	}
