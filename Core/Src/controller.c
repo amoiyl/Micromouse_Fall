@@ -35,7 +35,7 @@ void move(int8_t n) {
  * We recommend you implement this function so that turn(1) turns your rat 90 degrees in your positive rotation
  * direction and turn(-1) turns the other way.
  */
-int a = 0;
+
 void turn(int8_t n) {
 
 	setPIDGoalA(n*500);
@@ -45,7 +45,6 @@ void turn(int8_t n) {
 
 	}
 
-	a = 100;
 	resetPID();
 
 

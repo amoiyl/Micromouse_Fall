@@ -12,8 +12,9 @@ float distanceError = 0;
 float oldDistanceError = 0;
 
 float angleCorrection = 0;
+float distanceCorrection = 0;
 
-float kPw = .0017;
+float kPw = .0024;
 float kDw = .001;
 
 float kPx = 0.003;
@@ -68,7 +69,7 @@ void updatePID() {
 
 	distanceError = goalDistance
 			- ((getRightEncoderCounts() + getLeftEncoderCounts()) / 2);
-	float distanceCorrection = kPx * distanceError
+	distanceCorrection = kPx * distanceError
 			+ kDx * (distanceError - oldDistanceError);
 	oldDistanceError = distanceError;
 
@@ -144,6 +145,8 @@ int8_t PIDdone(void) { // There is no bool type in C. True/False values are repr
 	 * PIDdone() return true only if the error has been sufficiently close to zero for a certain number, say, 50, of SysTick calls in a row.
 	 */
 	if (done == 1) {
+		resetPID();
+		done = 0;
 		return 1;
 	}
 	return 0;

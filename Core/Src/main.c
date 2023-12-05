@@ -118,6 +118,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
 	turn(1);
+	move(1);
 
 
 
