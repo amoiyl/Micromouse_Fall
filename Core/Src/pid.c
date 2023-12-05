@@ -9,20 +9,25 @@
 int angleError = 0;
 int oldAngleError = 0;
 float distanceError = 0;
-float oldDistanceError=0;
+float oldDistanceError = 0;
 
-float angleCorrection=0;
+float angleCorrection = 0;
 
-float kPw = .001;
-float kDw = 0;
+float kPw = .0017;
+float kDw = .001;
 
-float kPx = 0.001;
-float kDx = 0;
+float kPx = 0.003;
+float kDx = 0.001;
 
 int goalDistance = 0;
 int goalAngle = 0;
 
-int count = 0;
+int bound_x = 100;
+int bound_w = 100;
+
+int done = 0;
+
+int test = 0;
 
 void resetPID() {
 	/*
@@ -34,21 +39,25 @@ void resetPID() {
 	 *
 	 * You should additionally set your distance and error goal values (and your oldDistanceError and oldAngleError) to zero.
 	 */
+	done = 0;
+
 
 	angleError = 0;
 	oldAngleError = 0;
 	distanceError = 0;
 	oldDistanceError = 0;
 
+	goalDistance = 0;
+	goalAngle = 0;
 
 
-	//goalDistance = 0;
-	//goalAngle = 0;
 
-	count = 0;
 
 	resetEncoders();
 	resetMotors();
+
+
+
 }
 
 void updatePID() {
@@ -63,26 +72,29 @@ void updatePID() {
 			+ kDx * (distanceError - oldDistanceError);
 	oldDistanceError = distanceError;
 
+
 	float leftCorrection = distanceCorrection - angleCorrection;
 	float rightCorrection = distanceCorrection + angleCorrection;
 
-	/*if (leftCorrection < .3 && leftCorrection > 0) {
-		setMotorLPWM(leftCorrection + .3);
-	} else if (leftCorrection > -.3 && leftCorrection < 0) {
-		setMotorLPWM(leftCorrection - .3);
-	} else {
-		setMotorLPWM(leftCorrection);
-	}
+	/*	if (leftCorrection < .3 && leftCorrection > 0) {
+	 setMotorLPWM(leftCorrection + .3);
+	 } else if (leftCorrection > -.3 && leftCorrection < 0) {
+	 setMotorLPWM(leftCorrection - .3);
+	 } else {
+	 setMotorLPWM(leftCorrection);
+	 }
 
-	if (rightCorrection < .3 && rightCorrection > 0) {
-		setMotorRPWM(rightCorrection + .3);
-	} else if (rightCorrection > -.3 && rightCorrection < 0) {
-		setMotorRPWM(rightCorrection - .3);
-	} else {
-		setMotorRPWM(rightCorrection);
-	}
+	 if (rightCorrection < .3 && rightCorrection > 0) {
+	 setMotorRPWM(rightCorrection + .3);
+	 } else if (rightCorrection > -.3 && rightCorrection < 0) {
+	 setMotorRPWM(rightCorrection - .3);
+	 } else {
+	 setMotorRPWM(rightCorrection);
+	 }
 	 */
 
+	setMotorLPWM(leftCorrection);
+	setMotorRPWM(rightCorrection);
 	/*
 	 * This function will do the heavy lifting PID logic. It should do the following: read the encoder counts to determine an error,
 	 * use that error along with some PD constants you determine in order to determine how to set the motor speeds, and then actually
@@ -101,12 +113,10 @@ void updatePID() {
 	 * right encoder counts. Refer to pseudocode example document on the google drive for some pointers.
 	 */
 
-	if (-20 < angleError && angleError < 20 && -20 < distanceError && distanceError < 20) {
-		count++;
-	} else {
-		count = 0;
+	if (-bound_w < angleError && angleError < bound_w
+			&& -bound_x < distanceError && distanceError < bound_x) {
+		done = 1;
 	}
-
 }
 
 void setPIDGoalD(int16_t distance) {
@@ -133,7 +143,7 @@ int8_t PIDdone(void) { // There is no bool type in C. True/False values are repr
 	 * the error is zero (realistically, have it set the variable when the error is close to zero, not just exactly zero). You will have better results if you make
 	 * PIDdone() return true only if the error has been sufficiently close to zero for a certain number, say, 50, of SysTick calls in a row.
 	 */
-	if (count >= 50) {
+	if (done == 1) {
 		return 1;
 	}
 	return 0;

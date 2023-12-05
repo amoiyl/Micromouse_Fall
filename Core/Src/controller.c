@@ -20,30 +20,36 @@ void move(int8_t n) {
 	 * You should also call resetPID before exiting this function so your rat is ready for the next instruction.
 	 */
 
-	setPIDGoalD(n*390);
+	setPIDGoalD(n*600);
 	setPIDGoalA(0);
 
-	while (!PIDdone()) {
+	while (PIDdone() == 0) {
 
 	}
 
 	resetPID();
+
 }
 
 /*
  * We recommend you implement this function so that turn(1) turns your rat 90 degrees in your positive rotation
  * direction and turn(-1) turns the other way.
  */
+int a = 0;
 void turn(int8_t n) {
 
-	setPIDGoalA(n*520);
+	setPIDGoalA(n*500);
 	setPIDGoalD(0);
 
-	while (!PIDdone()) {
+	while (PIDdone() == 0) {
 
 	}
 
+	a = 100;
 	resetPID();
+
+
+
 	/*
 	 * For assignment 3.1: Don't worry about implementing this yet
 	 * For assignment 3.2: This function should set the distance and angle goals appropriately for PID (hint: using the setGoal functions in pid.c)
@@ -54,3 +60,5 @@ void turn(int8_t n) {
 	 * You should also call resetPID before exiting this function so your rat is ready for the next instruction.
 	 */
 }
+
+
