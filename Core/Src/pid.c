@@ -26,9 +26,8 @@ int goalAngle = 0;
 int bound_x = 100;
 int bound_w = 100;
 
-int done = 0;
+int zeroError = 0;
 
-int test = 0;
 
 void resetPID() {
 	/*
@@ -40,7 +39,7 @@ void resetPID() {
 	 *
 	 * You should additionally set your distance and error goal values (and your oldDistanceError and oldAngleError) to zero.
 	 */
-	done = 0;
+	zeroError = 0;
 
 
 	angleError = 0;
@@ -116,7 +115,7 @@ void updatePID() {
 
 	if (-bound_w < angleError && angleError < bound_w
 			&& -bound_x < distanceError && distanceError < bound_x) {
-		done = 1;
+		zeroError = 1;
 	}
 }
 
@@ -144,9 +143,9 @@ int8_t PIDdone(void) { // There is no bool type in C. True/False values are repr
 	 * the error is zero (realistically, have it set the variable when the error is close to zero, not just exactly zero). You will have better results if you make
 	 * PIDdone() return true only if the error has been sufficiently close to zero for a certain number, say, 50, of SysTick calls in a row.
 	 */
-	if (done == 1) {
+	if (zeroError == 1) {
 		resetPID();
-		done = 0;
+		zeroError = 0;
 		return 1;
 	}
 	return 0;
