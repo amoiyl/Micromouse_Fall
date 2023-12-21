@@ -1,5 +1,8 @@
 # Micromouse Fall 2023 Syllabus
-- - - - - - - - - - - - - - - - - -  -
+- - - - - - - - - - - - - - - - - - - <br />
+
+Competed in IEEE @ UCLA's Fall Micromouse Rat Competition!! <br />
+
 
 # Design: <br />
   -- Power Delivery Schematic <br />
